@@ -1,5 +1,5 @@
 {
-    "name": "emberlabs/gravatarlib",
+    "name": "emiliopedrollo/gravatarlib",
     "description": "A lightweight PHP 5.3 OOP library providing easy gravatar integration.",
     "keywords": ["gravatar", "templating", "twig"],
     "type": "library",
