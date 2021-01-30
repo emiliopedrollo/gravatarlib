@@ -24,6 +24,5 @@
         "psr-4": {
             "Pedrollo\\GravatarLib\\": "src/"
         }
-    },
-    "target-dir" : "src"
+    }
 }
