@@ -7,10 +7,10 @@
  *-------------------------------------------------------------------
  * @category    gravatarlib
  * @package     gravatarlib
- * @author      emberlabs.org
- * @copyright   (c) 2011 emberlabs.org
+ * @author      Pedrollo.org
+ * @copyright   (c) 2011 Pedrollo.org
  * @license     MIT License
- * @link        https://github.com/emberlabs/gravatarlib
+ * @link        https://github.com/Pedrollo/gravatarlib
  *
  *===================================================================
  *
@@ -19,7 +19,8 @@
  *
  */
 
-namespace emberlabs\GravatarLib;
+namespace Pedrollo\GravatarLib;
+
 use \InvalidArgumentException;
 
 /**
@@ -29,9 +30,9 @@ use \InvalidArgumentException;
  *
  * @category    gravatarlib
  * @package     gravatarlib
- * @author      emberlabs.org
+ * @author      Pedrollo.org
  * @license     MIT License
- * @link        https://github.com/emberlabs/gravatarlib
+ * @link        https://github.com/emiliopedrollo/gravatarlib
  */
 class Gravatar
 {
@@ -43,7 +44,7 @@ class Gravatar
 	/**
 	 * @var mixed - The default image to use - either a string of the gravatar-recognized default image "type" to use, a URL, or false if using the...default gravatar default image (hah)
 	 */
-	protected $default_image = false;
+	protected $default_image = null;
 
 	/**
 	 * @var string - The maximum rating to allow for the avatar.
@@ -53,12 +54,12 @@ class Gravatar
 	/**
 	 * @var boolean - Should we use the secure (HTTPS) URL base?
 	 */
-	protected $use_secure_url = false;
+	protected $use_secure_url = true;
 
 	/**
 	 * @var string - A temporary internal cache of the URL parameters to use.
 	 */
-	protected $param_cache = NULL;
+	protected $param_cache = null;
 
 	/**#@+
 	 * @var string - URL constants for the avatar images
@@ -79,9 +80,9 @@ class Gravatar
 	/**
 	 * Set the avatar size to use.
 	 * @param integer $size - The avatar size to use, must be less than 512 and greater than 0.
-	 * @return \emberlabs\GravatarLib\Gravatar - Provides a fluent interface.
+	 * @return Gravatar - Provides a fluent interface.
 	 *
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public function setAvatarSize($size)
 	{
@@ -115,9 +116,9 @@ class Gravatar
 	/**
 	 * Set the default image to use for avatars.
 	 * @param mixed $image - The default image to use. Use boolean false for the gravatar default, a string containing a valid image URL, or a string specifying a recognized gravatar "default".
-	 * @return \emberlabs\GravatarLib\Gravatar - Provides a fluent interface.
+	 * @return Gravatar - Provides a fluent interface.
 	 *
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public function setDefaultImage($image)
 	{
@@ -166,9 +167,9 @@ class Gravatar
 	/**
 	 * Set the maximum allowed rating for avatars.
 	 * @param string $rating - The maximum rating to use for avatars ('g', 'pg', 'r', 'x').
-	 * @return \emberlabs\GravatarLib\Gravatar - Provides a fluent interface.
+	 * @return Gravatar - Provides a fluent interface.
 	 *
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public function setMaxRating($rating)
 	{
@@ -198,7 +199,7 @@ class Gravatar
 
 	/**
 	 * Enable the use of the secure protocol for image URLs.
-	 * @return \emberlabs\GravatarLib\Gravatar - Provides a fluent interface.
+	 * @return Gravatar - Provides a fluent interface.
 	 */
 	public function enableSecureImages()
 	{
@@ -209,7 +210,7 @@ class Gravatar
 
 	/**
 	 * Disable the use of the secure protocol for image URLs.
-	 * @return \emberlabs\GravatarLib\Gravatar - Provides a fluent interface.
+	 * @return Gravatar - Provides a fluent interface.
 	 */
 	public function disableSecureImages()
 	{
@@ -263,18 +264,18 @@ class Gravatar
 			}
 
 			// Stuff the request params into the param_cache property for later reuse
-			$this->params_cache = (!empty($params)) ? '?' . implode('&', $params) : '';
+			$this->param_cache = (!empty($params)) ? '?' . implode('&', $params) : '';
 		}
 
 		// Handle "null" gravatar requests.
 		$tail = '';
 		if(empty($email))
 		{
-			$tail = !empty($this->params_cache) ? '&f=y' : '?f=y';
+			$tail = !empty($this->param_cache) ? '&f=y' : '?f=y';
 		}
 
 		// And we're done.
-		return $url . $this->params_cache . $tail;
+		return $url . $this->param_cache . $tail;
 	}
 
 	/**
@@ -288,10 +289,13 @@ class Gravatar
 		return hash('md5', strtolower(trim($email)));
 	}
 
-	/**
-	 * ...Yeah, it's just an alias of buildGravatarURL.  This is just to make it easier to use as a twig asset.
-	 * @see \emberlabs\GravatarLib\Gravatar::buildGravatarURL()
-	 */
+    /**
+     * ...Yeah, it's just an alias of buildGravatarURL.  This is just to make it easier to use as a twig asset.
+     * @param $email
+     * @param bool $hash_email
+     * @return string
+     * @see Gravatar::buildGravatarURL()
+     */
 	public function get($email, $hash_email = true)
 	{
 		// Just an alias.  Makes it easy to use this as a twig asset.
